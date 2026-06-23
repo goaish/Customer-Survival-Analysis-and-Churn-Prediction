@@ -7,7 +7,7 @@ Predictive analytics use churn prediction models that predict customer churn by 
 
 In this project I aim to perform customer survival analysis and build a model which can predict customer churn. I also aim to build an app which can be used to understand why a specific customer would stop the service and to know his/her expected lifetime value.
 
-# **Final Customer Churn Prediction**
+# **Final Customer Churn Prediction App**
 
 <img width="1920" height="1116" alt="app-pic" src="https://github.com/user-attachments/assets/3fdc29bb-ff25-4662-807e-13a8b29d09fe" />
 
@@ -142,9 +142,48 @@ When the customers are new they do not opt for various services and their churni
 # Internet Service By Contract Type:
 <img width="277" height="186" alt="internetservice-contract" src="https://github.com/user-attachments/assets/4252fd01-cc68-45b7-a8e3-0c5e9cd80b75" />
 
+Many of the people of who opt for month-to-month Contract choose Fiber optic as Internet service and this is the reason for higher churn rate for fiber optic Internet service type.
+
+# Payment method By Contract Type:
+<img width="499" height="223" alt="payment-contract" src="https://github.com/user-attachments/assets/6c7b8a3a-ae29-41e3-a60e-4d997e3ce0a5" />
+
+People having month-to-month contract prefer paying by Electronic Check mostly or mailed check. The reason might be short subscription cancellation process compared to automatic payment.
+
+# Monthly Charges:
+
+<img width="272" height="181" alt="monthlycharges" src="https://github.com/user-attachments/assets/4e5cfc61-bc88-43fd-a010-33711ee04f03" />
+
+As we can see the customers paying high monthly fees churn more.
+
+# Modelling
+For the modelling, I will use tress based Ensemble method as we do not have linearity in this classification problem. Also, we have a class imbalance of 1:3 and to combat it I will assign class weightage of 1:3 which means false negatives are 3 times costlier than false positives. I built a model on 80% of data and validated model on remaining 20% of data keeping in mind that I do not have data leakage. The random forest model has many hyperparameters and I tuned them using Grid Search Cross Validation while making sure that I do not overfit.
+
+The final model resulted in 0.62 F1 score and 0.85 ROC-AUC. The resulting plots can be seen below.
+<img width="548" height="267" alt="model_1" src="https://github.com/user-attachments/assets/52be7a4b-4c77-424b-9e01-aa96d2439014" />
+<img width="554" height="401" alt="model_feat_imp" src="https://github.com/user-attachments/assets/cc499ade-e856-4d42-aede-cd48170b69e2" />
+
+From the feature importance plot, we can see which features govern the customer churn.
+
+# Explainability
+We can explain and understand the Random forest model using explainable AI modules such as Permutation Importance, Partial Dependence plots and Shap values.
+
+Permutation Importance shows feature importance by randomly shuffling feature values and measuring how much it degrades our performance.
+<img width="289" height="348" alt="eli51" src="https://github.com/user-attachments/assets/6392faf9-8d13-4de9-98dc-65ebfd03ca6c" />
+<img width="290" height="177" alt="eli52" src="https://github.com/user-attachments/assets/e50e2727-d42f-4850-ab1f-a4721fa56930" />
+
+Partial dependence plot is used to see how churning probability changes across the range of particular feature. For example, in below graph of tenure group, the churn probability decreases at a higher rate if a person is in tenure group 2 compared to 1.
+<img width="635" height="401" alt="pdp_tenure" src="https://github.com/user-attachments/assets/a7899ccc-5317-4840-86a0-2de45c0dfabc" />
+<img width="674" height="396" alt="pdp_contract" src="https://github.com/user-attachments/assets/78b563de-cda9-41df-a420-2112fb0e8dea" />
+<img width="670" height="402" alt="pdp_monthly_charges" src="https://github.com/user-attachments/assets/c25c1a05-8362-477f-be39-b8eb8ea0ea62" />
+<img width="672" height="398" alt="pdp_total_charges" src="https://github.com/user-attachments/assets/a461bcfb-3ed2-4acd-97c8-0d483677ab9b" />
+
+Shap values (SHapley Additive exPlanations) is a game theoretic approach to explain the output of any machine learning model. In below plot we can see that why a particual customer's churning probability is less than baseline value and which features are causing them.
+
+<img width="1577" height="366" alt="shap" src="https://github.com/user-attachments/assets/0a8e46bc-57fc-4a12-8ec9-19173b0f4964" />
 
 
+## Flask App
+I saved the final tuned Random Forest model and deployed it using Flask web app. Flask is a micro web framework written in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications. I saved the shap value explainer tuned using random forest model to show shap plots in app. I have also utilized the cox-proportional hazard model to show survival curve and hazard curve, and to calculate expected customer lifetime value.
 
-
-
+The final app shows churning probability, gauge chart of how severe a customer is and shap values based on customer's data. The final app layout can be seen above.
 
